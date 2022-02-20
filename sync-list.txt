@@ -1,0 +1,5 @@
+icons/
+utils/
+extension.js
+metadata.json
+stylesheet.css

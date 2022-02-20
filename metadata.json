@@ -1,0 +1,7 @@
+{
+  "uuid": "nba-games@mauro.giaco.it",
+  "name": "NBA games",
+  "description": "Display NBA games results",
+  "version": 1,
+  "shell-version": [ "40" ]
+}
