@@ -41,13 +41,11 @@ var Menu = GObject.registerClass(
             
             // Getting date check this
             // https://gjs-docs.gnome.org/glib20~2.66.1/glib.datetime
-            // let now = GLib.DateTime.new_now_utc();
-            // let yesterday = now.add_days(-1);
-            // log("Yesterday: " + yesterday.format("%Y-%m-%d"));
+            let now = GLib.DateTime.new_now_utc();
+            let yesterday = now.add_days(-1);
+            log("Yesterday: " + yesterday.format("%Y-%m-%d"));
 
-            // XXX: Last available date for games is 17-02-2022
-            let date = GLib.DateTime.new_local(2022, 2, 17, 0, 0, 0);
-            Api.getGames(date);
+            Api.getGames(yesterday);
             
             // Sample GET call
             // let _session = new Soup.SessionAsync();
