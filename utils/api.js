@@ -22,3 +22,23 @@ function getGames(date) {
       });
   });
 }
+
+// FIXME: Check this out
+function send_request(url, type='GET') {
+  let message = Soup.Message.new(type, url);
+  message.request_headers.append(
+      'Authorization',
+      `Bearer ${token}`
+  )
+  message.request_headers.set_content_type("application/json", null);
+  let responseCode = soupSyncSession.send_message(message);
+  let out;
+  if(responseCode == 200) {
+      try {
+          out = JSON.parse(message['response-body'].data);
+      } catch(error) {
+          log(error);
+      }
+  }
+  return out;
+}
