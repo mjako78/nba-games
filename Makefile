@@ -8,8 +8,8 @@ NONE=\033[0m
 
 # Paths
 CWD=$(shell pwd)
-DIR_NAME="$(notdir $(shell pwd))"
-DEST_PATH="${HOME}/.local/share/gnome-shell/extensions/${DIR_NAME}"
+EXTENSION_NAME="$(notdir $(shell pwd))"
+DEST_PATH="${HOME}/.local/share/gnome-shell/extensions/${EXTENSION_NAME}"
 
 .DEFAULT_GOAL := help
 .PHONY: help
@@ -38,3 +38,22 @@ sync: check_deps check_dest_dir
 	printf "Syncing to dest directory [  ]\n"
 	rsync -arz --files-from=./sync-list.txt $(CWD) $(DEST_PATH) || (printf "Syncing to dest directory [$(RED)KO$(NONE)]\n"; exit 1)
 	printf "Syncing to dest directory [$(GREEN)OK$(NONE)]\n"
+
+restart_shell: ## Restart gnome shell
+	printf "Restarting Gnome shell [  ]\n"
+	gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell --method org.gnome.Shell.Eval 'Meta.restart(_("Restarting…"))'
+	printf "Restarting Gnome shell [$(GREEN)OK$(NONE)]\n"
+
+enable: ## Enable this extension
+	printf "Enabling extension [  ]\n"
+	gnome-extensions enable $(EXTENSION_NAME)
+	printf "Enabling extension [$(GREEN)OK$(NONE)]\n"
+
+disable: ## Enable this extension
+	printf "Disabling extension [  ]\n"
+	gnome-extensions disable $(EXTENSION_NAME)
+	printf "Disabling extension [$(GREEN)OK$(NONE)]\n"
+
+deploy: ## Deploy a new version
+deploy:
+deploy: disable sync restart_shell enable
