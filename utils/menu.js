@@ -46,6 +46,13 @@ var Menu = GObject.registerClass(
             log("Yesterday: " + yesterday.format("%Y-%m-%d"));
 
             Api.getGames(yesterday);
+            // log("Games played: " + games.length);
+            // games.forEach(game => {
+            //     log("\n*** GAME " + game.id + " ***");
+            //     log(game.home_team.full_name.padEnd(30) + game.home_team_score.toString().padStart(3));
+            //     log(game.visitor_team.full_name.padEnd(30) + game.visitor_team_score.toString().padStart(3));
+            //     log("*******************");
+            // });
             
             // Sample GET call
             // let _session = new Soup.SessionAsync();
