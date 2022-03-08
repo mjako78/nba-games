@@ -9,13 +9,14 @@ const extensionUtils = imports.misc.extensionUtils;
 const Me = extensionUtils.getCurrentExtension();
 
 const Lang = imports.lang;
-// const Soup = imports.gi.Soup;
 const GLib = imports.gi.GLib;
 
 const Api = Me.imports.utils.api;
 
 var Menu = GObject.registerClass(
     class Menu extends panelMenu.Button {
+        _games = [];
+        
         _init(menuAlignment, nameText) {
             super._init(menuAlignment, nameText);
             
@@ -37,43 +38,35 @@ var Menu = GObject.registerClass(
             hbox.add_child(arrowIcon(St.Side.BOTTOM));
             hbox.add_child(this.buttonText);
             this.add_child(hbox);
+
+            this._refreshGames();
+
             this.show();
-            
+        }
+
+        _refreshGames() {
+            log("Refreshing games");
             // Getting date check this
             // https://gjs-docs.gnome.org/glib20~2.66.1/glib.datetime
             let now = GLib.DateTime.new_now_utc();
             let yesterday = now.add_days(-1);
             log("Yesterday: " + yesterday.format("%Y-%m-%d"));
 
-            Api.getGames(yesterday);
-            // log("Games played: " + games.length);
-            // games.forEach(game => {
-            //     log("\n*** GAME " + game.id + " ***");
-            //     log(game.home_team.full_name.padEnd(30) + game.home_team_score.toString().padStart(3));
-            //     log(game.visitor_team.full_name.padEnd(30) + game.visitor_team_score.toString().padStart(3));
-            //     log("*******************");
-            // });
-            
-            // Sample GET call
-            // let _session = new Soup.SessionAsync();
-            // const url = "https://www.balldontlie.io/api/v1/games?dates[]=" + yesterday.format("%Y-%m-%d");
-            // let request = Soup.Message.new('GET', url);
-            // _session.queue_message(request, function(_session, message) {
-            //     //log(message.response_body.data);
-            //     let response = JSON.parse(message.response_body.data);
-            //     let games = response.data;
-            //     log("Games played: " + games.length);
-            //     games.forEach(game => {
-            //         log("\n*** GAME " + game.id + " ***");
-            //         log(game.home_team.full_name.padEnd(30) + game.home_team_score.toString().padStart(3));
-            //         log(game.visitor_team.full_name.padEnd(30) + game.visitor_team_score.toString().padStart(3));
-            //         log("*******************");
-            //     });
-            // });
+            this._games = Api.getGames(yesterday);
+            if (this._games) {
+                this.buttonText.set_text(this._games.length.toString());
+                this._prettyPrint(this._games);
+            }
         }
 
-        async _refreshGames() {
-            log("Refreshing games");
+        _prettyPrint(games) {
+            log("Games played: " + games.length);
+            games.forEach(game => {
+                log("\n*** GAME " + game.id + " ***");
+                log(game.home_team.full_name.padEnd(30) + game.home_team_score.toString().padStart(3));
+                log(game.visitor_team.full_name.padEnd(30) + game.visitor_team_score.toString().padStart(3));
+                log("*******************");
+            });
         }
     }
 )

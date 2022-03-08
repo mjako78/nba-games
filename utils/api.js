@@ -17,8 +17,7 @@ function getGames(date) {
         try {
             games = JSON.parse(message.response_body.data).data;
         } catch (error) {
-            log("Error parsing response");
-            log(error);
+            logError(error);
         }
     } else {
         log("Error getting response; responseCode: " + responseCode);
