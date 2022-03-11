@@ -4,6 +4,7 @@ const St = imports.gi.St;
 const Gio = imports.gi.Gio;
 const GObject = imports.gi.GObject;
 const panelMenu = imports.ui.panelMenu;
+const popupMenu = imports.ui.popupMenu;
 const { arrowIcon } = imports.ui.popupMenu;
 const extensionUtils = imports.misc.extensionUtils;
 const Me = extensionUtils.getCurrentExtension();
@@ -45,18 +46,20 @@ var Menu = GObject.registerClass(
         }
 
         _refreshGames() {
-            log("Refreshing games");
-            // Getting date check this
-            // https://gjs-docs.gnome.org/glib20~2.66.1/glib.datetime
             let now = GLib.DateTime.new_now_utc();
             let yesterday = now.add_days(-1);
-            log("Yesterday: " + yesterday.format("%Y-%m-%d"));
-
             this._games = Api.getGames(yesterday);
             if (this._games) {
                 this.buttonText.set_text(this._games.length.toString());
-                this._prettyPrint(this._games);
+                this._games.forEach(this._addGameMenuItem.bind(this));
             }
+        }
+
+        _addGameMenuItem(game) {
+            let txt = game.visitor_team.full_name + " @ " + game.home_team.full_name + " " 
+                + game.visitor_team_score.toString() + ":" + game.home_team_score.toString();
+            let menuItem = new popupMenu.PopupMenuItem(txt);
+            this.menu.addMenuItem(menuItem);
         }
 
         _prettyPrint(games) {
