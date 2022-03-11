@@ -56,10 +56,9 @@ var Menu = GObject.registerClass(
         }
 
         _addGameMenuItem(game) {
-            let txt = game.visitor_team.full_name + " @ " + game.home_team.full_name + " " 
+            let txt = game.visitor_team.name + " @ " + game.home_team.name + " " 
                 + game.visitor_team_score.toString() + ":" + game.home_team_score.toString();
-            let menuItem = new popupMenu.PopupMenuItem(txt);
-            this.menu.addMenuItem(menuItem);
+            this.menu.addMenuItem(new popupMenu.PopupMenuItem(txt));
         }
 
         _prettyPrint(games) {
